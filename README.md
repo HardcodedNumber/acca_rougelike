@@ -4,6 +4,10 @@ Lessons and gameplay code for the roguelike game at Atlanta Career and College A
 
 Each lesson will go over how to create a basic game in p5play
 
+## References
+
+- https://p5play.org/learn/sprite.html?page=6
+
 ## Lessons
 
 ### Lesson 1
