@@ -6,9 +6,7 @@ Lessons and gameplay code for the roguelike game at Atlanta Career and College A
 
 Each lesson will go over how to create a basic game in p5play
 
-
 ## Lessons
-
 
 ### Lesson 1
 
@@ -22,3 +20,10 @@ Each lesson will go over how to create a basic game in p5play
 - Input handling
     - WASD input
     - Jump
+
+### Lesson 2
+
+#### Objectives:
+
+- Collisions
+- Platforms

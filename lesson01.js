@@ -6,6 +6,9 @@
 
 let player, ground, groundSensor;
 
+// Setup & draw
+///////////////////////////////////////////////////////////
+
 function setup() {
   // Create the canvas
   new Canvas("16:9");
