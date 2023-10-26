@@ -2,8 +2,6 @@
 
 Lessons and gameplay code for the roguelike game at Atlanta Career and College Academy
 
-[[_TOC_]]
-
 Each lesson will go over how to create a basic game in p5play
 
 ## Lessons
