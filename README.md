@@ -4,6 +4,16 @@ Lessons and gameplay code for the roguelike game at Atlanta Career and College A
 
 Each lesson will go over how to create a basic game in p5play
 
+## Local Development
+
+- Use [VSCode](https://code.visualstudio.com/)
+- Install [Live Server Extension](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)
+
+To play any lesson:
+1. Navigate to a lesson
+1. Right click the corresponding index.html file
+1. Go live, which will open a browser window
+
 ## References
 
 - https://p5play.org/learn/sprite.html?page=6
@@ -11,6 +21,8 @@ Each lesson will go over how to create a basic game in p5play
 ## Lessons
 
 ### Lesson 1
+
+[Game](Lessons/Lesson01/index.html)
 
 #### Objectives:
 
