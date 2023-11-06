@@ -18,11 +18,14 @@ To play any lesson:
 
 - https://p5play.org/learn/sprite.html?page=6
 
+Art:
+
+- https://www.megavoxels.com/learn/how-to-make-a-pixel-art-heart/
+- http://www.kenney.nl/
+
 ## Lessons
 
 ### Lesson 1
-
-[Game](Lessons/Lesson01/index.html)
 
 #### Objectives:
 
