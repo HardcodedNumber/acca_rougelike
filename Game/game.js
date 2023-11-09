@@ -25,8 +25,17 @@ let maxLives = 3;
 let bulletSprite;
 let gunEffectSprite;
 let bullets = [];
-let bulletOffset = 20;
+let bulletOffset = 25;
 let score = 0;
+
+let backgroundMusic;
+let bgMusicVolume = 0.2;
+
+let pistolSFX;
+let pistolSFXVolume = 0.5;
+
+let playerFallSFX, playerHurtSFX, playerWalkSFX;
+let playerSFXVolume = 0.5;
 
 // Setup & draw
 ///////////////////////////////////////////////////////////
@@ -51,6 +60,14 @@ function preload() {
   gunEffectSprite = loadImage('Assets/Art/Tiles/tile_0043.png');
 
   loadLevelAssets();
+
+  soundFormats('mp3');
+
+  backgroundMusic = loadSound('Assets/Sounds/backgroundMusic');
+  pistolSFX = loadSound('Assets/Sounds/pistolSFX');
+  playerFallSFX = loadSound('Assets/Sounds/playerFallSFX');
+  playerHurtSFX = loadSound('Assets/Sounds/playerHurtSFX');
+  playerWalkSFX = loadSound('Assets/Sounds/playerWalkSFX');
 }
 
 function setup() {
@@ -72,52 +89,38 @@ function setup() {
 
     playerLives.push(heart);
   }
+
+  backgroundMusic.play();
+  backgroundMusic.amp(bgMusicVolume);
+
+  playerFallSFX.amp(playerSFXVolume);
+  playerHurtSFX.amp(playerSFXVolume);
+  playerWalkSFX.amp(playerSFXVolume);
 }
 
 function draw() {
   clear();
   background('#fcdfcd');
 
-  // input handling
-  if (player.lives > 0) {
-
-    //jumping
-    if (isGrounded() &&
-      (kb.presses('up') || kb.presses('space'))) {
-      player.vel.y = -4;
-    }
-
-    // movement
-    if (kb.pressing('A')) {
-      player.vel.x = -playerSpeed;
-      player.mirror.x = true;
-      player.changeAni(PlayerState.Run);
-    }
-    else if (kb.pressing('D')) {
-      player.vel.x = playerSpeed;
-      player.mirror.x = false;
-      player.changeAni(PlayerState.Run);
-    }
-    else {
-      player.vel.x = 0;
-      player.changeAni(PlayerState.Idle);
-    }
-
-    // shooting
-    if (kb.presses('F')) {
-      CreateBullet();
-    }
+  //audio
+  if (!backgroundMusic.isPlaying()) {
+    backgroundMusic.play();
   }
+
+  //input handling
+  handleInput();
 
   updateEnemies();
 
   //collision
   handleLevelCollision(player);
-  handleEnemyCollision(player);
+  handleEnemyCollision(player, playerHurtSFX);
 
   if (player.y >= playerFallDeath) {
     player.x = playerSpawn[0].x;
     player.y = playerSpawn[0].y;
+
+    playerFallSFX.play();
 
     player.lives--;
   }
@@ -127,7 +130,6 @@ function draw() {
 
     if (bullet.x > camera.x + width / 2 || bullet.x <= camera.x - width / 2) {
       bullet.remove();
-      console.log("removed");
     }
   }
 
@@ -148,8 +150,58 @@ function draw() {
   }
 }
 
+function mousePressed() {
+  //As chrome and browsers don't like it when you spam
+  //audio and other assets, this is a workaround
+  if (getAudioContext().state !== 'running') {
+    getAudioContext().resume();
+  }
+}
+
 // Other Methods
 ///////////////////////////////////////////////////////////
+
+function handleInput() {
+  if (player.lives > 0) {
+
+    //jumping
+    if (isGrounded() &&
+      (kb.presses('up') || kb.presses('space'))) {
+      player.vel.y = -4;
+    }
+
+    // movement
+    if (kb.pressing('A')) {
+      player.vel.x = -playerSpeed;
+      player.mirror.x = true;
+      player.changeAni(PlayerState.Run);
+
+      if (!playerWalkSFX.isPlaying()) {
+        playerWalkSFX.play();
+      }
+    }
+    else if (kb.pressing('D')) {
+      player.vel.x = playerSpeed;
+      player.mirror.x = false;
+      player.changeAni(PlayerState.Run);
+
+      if (!playerWalkSFX.isPlaying()) {
+        a
+        playerWalkSFX.play();
+      }
+    }
+    else {
+      player.vel.x = 0;
+      player.changeAni(PlayerState.Idle);
+      playerWalkSFX.stop();
+    }
+
+    // shooting
+    if (kb.presses('F')) {
+      createBullet();
+    }
+  }
+}
 
 function isGrounded() {
   return groundSensor.overlapping(platformLefts) ||
@@ -176,12 +228,12 @@ function createPlayer() {
   player.y = playerSpawn[0].y;
 }
 
-function CreateBullet() {
+function createBullet() {
   var bulletSpawnPoint = player.mirror.x ? -bulletOffset : bulletOffset;
   var bullet = new Sprite(player.x + bulletSpawnPoint, player.y, 16, 16, 'kf');
 
   bullet.img = bulletSprite;
-  bullet.vel.x = player.vel.x + player.mirror.x ? -10 : 10;
+  bullet.vel.x = player.mirror.x ? -10 : 10;
   bullet.vel.y = 0;
   bullet.mirror.x = player.mirror.x;
 
@@ -189,6 +241,9 @@ function CreateBullet() {
   bullet.overlaps(bees, onBulletHitBees);
 
   bullets.push(bullet);
+
+  pistolSFX.amp(pistolSFXVolume);
+  pistolSFX.play();
 }
 
 function updateLives() {

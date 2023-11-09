@@ -4,5 +4,6 @@
         "mult",
         "tilemap",
         "WASD"
-    ]
+    ],
+    "liveServer.settings.port": 5501
 }

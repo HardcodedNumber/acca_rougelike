@@ -23,6 +23,23 @@ Art:
 - https://www.megavoxels.com/learn/how-to-make-a-pixel-art-heart/
 - http://www.kenney.nl/
 
+Audio
+
+Background Music:
+https://freesound.org/people/Questiion/sounds/166392/
+
+Laser Pistol SFX:
+https://freesound.org/people/steshystesh/sounds/336501/
+
+Player Hurt SFX:
+https://freesound.org/people/FullStackSound/sounds/662465/
+
+Player walk SFX:
+https://freesound.org/people/DRFX/sounds/347371/
+
+Player death SFX:
+https://bigsoundbank.com/sound-0477-wilhelm-scream.html
+
 ## Lessons
 
 ### Lesson 1

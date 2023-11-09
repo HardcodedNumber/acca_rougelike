@@ -172,13 +172,16 @@ function handleLevelCollision(player) {
 /**
  * Handles the interaction when the player hits an enemy
  * @param {Sprite} player The player sprite
+ * @param {Sound} sfx The player hurt sfx
  */
-function handleEnemyCollision(player) {
+function handleEnemyCollision(player, sfx) {
 	if ((player.collided(slugs) ||
 		player.collided(bees)) &&
 		frameCount - player.lastHit > 120) {
 		player.lastHit = frameCount;
 		player.lives--;
+
+		sfx.play();
 	}
 }
 
