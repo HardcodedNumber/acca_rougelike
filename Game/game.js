@@ -186,7 +186,6 @@ function handleInput() {
       player.changeAni(PlayerState.Run);
 
       if (!playerWalkSFX.isPlaying()) {
-        a
         playerWalkSFX.play();
       }
     }
