@@ -1,29 +1,42 @@
-let platformLeft, platformLefSprite;
-let platformMiddle, platformMiddleSprite;
-let platformRight, platformRightSprite;
 
-let platformLeftWall, platformLeftWallSprite;
-let platformRightWall, platformRightWallSprite;
+// Level Entities
+///////////////////////////////////////////////////////////
 
-let mushroom, mushroomIdleSprite;
+let platformLefts, platformLefSprite;
+let platformMiddles, platformMiddleSprite;
+let platformRights, platformRightSprite;
+
+let platformLeftWalls, platformLeftWallSprite;
+let platformRightWalls, platformRightWallSprite;
+
+let mushrooms, mushroomIdleSprite;
 let playerSpawn;
 let goal, goalSprite;
 
-let flower, flowerSprite;
-let doubleFlower, doubleFlowerSprite;
+let flowers, flowerSprite;
+let doubleFlowers, doubleFlowerSprite;
 
-let treeBase, treeBaseSprite;
-let treeBaseLeft, treeBaseLeftSprite;
-let treeBaseRight, treeBaseRightSprite;
-let treeTrunk, treeTrunkSprite;
-let treeTrunkLeft, treeTrunkLeftSprite;
-let treeTrunkRight, treeTrunkRightSprite;
-let treeTrunkDouble, treeTrunkDoubleSprite;
-let treetop, treeTopSprite;
+let treeBases, treeBaseSprite;
+let treeBaseLefts, treeBaseLeftSprite;
+let treeBaseRights, treeBaseRightSprite;
+let treeTrunks, treeTrunkSprite;
+let treeTrunkLefts, treeTrunkLeftSprite;
+let treeTrunkRights, treeTrunkRightSprite;
+let treeTrunkDoubles, treeTrunkDoubleSprite;
+let treeTops, treeTopSprite;
 
 let clouds, cloudSprite;
 
-function LoadLevelAssets() {
+let slugs;
+let bees;
+
+// Level Methods
+///////////////////////////////////////////////////////////
+
+/**
+ * Load all the level assets
+ */
+function loadLevelAssets() {
 	platformLefSprite = loadImage('Assets/Art/Tiles/tile_0003.png');
 	platformMiddleSprite = loadImage('Assets/Art/Tiles/tile_0004.png');
 	platformRightSprite = loadImage('Assets/Art/Tiles/tile_0005.png');
@@ -50,52 +63,81 @@ function LoadLevelAssets() {
 	cloudSprite = loadImage('Assets/Art/Tiles/tile_0011.png');
 }
 
-function CreateLevel() {
-	platformLeft = Entity.CreatePlatform(platformLefSprite, TileCharacters.PlatformLeft);
-	platformMiddle = Entity.CreatePlatform(platformMiddleSprite, TileCharacters.Platform);
-	platformRight = Entity.CreatePlatform(platformRightSprite, TileCharacters.PlatformRight);
+/**
+ * Creates the sprites and enemies used in the level
+ */
+function createLevel() {
+	platformLefts = Entity.CreatePlatform(platformLefSprite, TileCharacters.PlatformLeft);
+	platformMiddles = Entity.CreatePlatform(platformMiddleSprite, TileCharacters.Platform);
+	platformRights = Entity.CreatePlatform(platformRightSprite, TileCharacters.PlatformRight);
 
-	platformLeftWall = Entity.CreatePlatform(platformLeftWallSprite, TileCharacters.PlatformWallLeft);
-	platformRightWall = Entity.CreatePlatform(platformRightWallSprite, TileCharacters.PlatformWallRight);
+	platformLeftWalls = Entity.CreatePlatform(platformLeftWallSprite, TileCharacters.PlatformWallLeft);
+	platformRightWalls = Entity.CreatePlatform(platformRightWallSprite, TileCharacters.PlatformWallRight);
 
-	mushroom = Entity.CreatePlatform(mushroomIdleSprite, TileCharacters.Mushroom);
+	mushrooms = Entity.CreatePlatform(mushroomIdleSprite, TileCharacters.Mushroom);
 
 	playerSpawn = Entity.CreateEnvironment('', TileCharacters.PlayerSpawn);
 	playerSpawn.visible = false;
 
-	flower = Entity.CreateEnvironment(flowerSprite, TileCharacters.Flower);
-	doubleFlower = Entity.CreateEnvironment(doubleFlowerSprite, TileCharacters.DoubleFlower);
+	flowers = Entity.CreateEnvironment(flowerSprite, TileCharacters.Flower);
+	doubleFlowers = Entity.CreateEnvironment(doubleFlowerSprite, TileCharacters.DoubleFlower);
 
 	goal = Entity.CreateEnvironment(goalSprite, TileCharacters.Goal);
 
-	treeBaseLeft = Entity.CreateEnvironment(treeBaseLeftSprite, TileCharacters.TreeBaseLeft);
-	treeBase = Entity.CreateEnvironment(treeBaseSprite, TileCharacters.TreeBase);
-	treeBaseRight = Entity.CreateEnvironment(treeBaseRightSprite, TileCharacters.TreeBaseRight);
-	treeTrunkLeft = Entity.CreateEnvironment(treeTrunkLeftSprite, TileCharacters.TreeTrunkLeft);
-	treeTrunk = Entity.CreateEnvironment(treeTrunkSprite, TileCharacters.TreeTrunk);
-	treeTrunkRight = Entity.CreateEnvironment(treeTrunkRightSprite, TileCharacters.TreeTrunkRight);
-	treeTrunkDouble = Entity.CreateEnvironment(treeTrunkDoubleSprite, TileCharacters.TreeTrunkDouble);
-	treetop = Entity.CreateEnvironment(treeTopSprite, TileCharacters.TreeTop);
+	treeBaseLefts = Entity.CreateEnvironment(treeBaseLeftSprite, TileCharacters.TreeBaseLeft);
+	treeBases = Entity.CreateEnvironment(treeBaseSprite, TileCharacters.TreeBase);
+	treeBaseRights = Entity.CreateEnvironment(treeBaseRightSprite, TileCharacters.TreeBaseRight);
+	treeTrunkLefts = Entity.CreateEnvironment(treeTrunkLeftSprite, TileCharacters.TreeTrunkLeft);
+	treeTrunks = Entity.CreateEnvironment(treeTrunkSprite, TileCharacters.TreeTrunk);
+	treeTrunkRights = Entity.CreateEnvironment(treeTrunkRightSprite, TileCharacters.TreeTrunkRight);
+	treeTrunkDoubles = Entity.CreateEnvironment(treeTrunkDoubleSprite, TileCharacters.TreeTrunkDouble);
+	treeTops = Entity.CreateEnvironment(treeTopSprite, TileCharacters.TreeTop);
 
 	clouds = Entity.CreateEnvironment(cloudSprite, TileCharacters.Clouds);
+
+	slugs = new Group();
+	slugs.collider = 'd';
+	slugs.addAni('walk',
+		'Assets/Art/tiles/tile_0055.png',
+		'Assets/Art/tiles/tile_0056.png'
+	);
+	slugs.tile = TileCharacters.Slug;
+	slugs.anis.frameDelay = 30;
+	slugs.w = 16;
+	slugs.h = 16;
+	slugs.rotationLock = true;
+	slugs.dir = 1;
+	slugs.mirror.x = true;
+
+	bees = new Group();
+	bees.collider = 'n';
+	bees.addAni('fly',
+		'Assets/Art/Tiles/tile_0051.png',
+		'Assets/Art/Tiles/tile_0052.png'
+	);
+	bees.tile = TileCharacters.Bees;
+	bees.w = 16;
+	bees.h = 16;
+	bees.rotationLock = true;
+	bees.mirror.x = true;
 
 	new Tiles(
 		[
 			'                                                                                                                                                                                                                                                                          ',
 			'                                                                c                                                                                                                                c               8                                                        ',
 			'                                c                                                             c             c                                c                         c               c                         4                              c                         ',
-			'                         c                                                                                                                                                                                       4                                                        ',
-			'                                                                                                                                         c                                              f                        1                                                        ',
-			'           c                                                          c                            c                                                            dd      f              lpppppppppppppr    lpppppppppppppr                                                 ',
-			'                                 c                                             8                                        8                                 lpppppppppppppr              [             ]    [             ]                            c                    ',
-			'                                                                               4                      d                 7                      c          [             ]              [             ]    [             ]                                                 ',
-			'    8                                                                          4            lppppppppppppppppr          4                                 [             ]              [             ]    [           8 ]                                      c          ',
-			'    5          8                                                               4            [                ]          4                                 [             ]              [             ]    [           4 ]         c                                       ',
-			'    4          4                                                               3         m  [                ]          2                 f             m [             ]            m [             ]    [           6 ]                                                 ',
-			'    1 x        4                                                          lpppppppppr  lppppr                ]   lppppppppppr    lpppppppppppr    lpppppppppppr         ]      lpppppppppppr         ]    [       d   3 ]                     8                           ',
-			'lpppppppppr    6          f                                  lppppppppr   [         ]  [    ]                ]   [          ]    [           ]    [           ]         ]      [           ]         ]    [     lpppppppppppppr               4                           ',
-			'[         ]    6   lpppppppr  8                      c       [        ]   [         ]  [    ]                ]   [          ]    [           ]    [           ]         ]      [           ]         ]    [     [             ]               5                      88   ',
-			'[         ]    2   [       ]  7                             m[        ]   [         ]  [    ]                ]   [          ]    [           ]    [           ]         ]      [           ]         ]    [     [             ]               4                      44   ',
+			'                         c                                                                                                                                        b                                     b        4    b                                                   ',
+			'                                                                                                                                         c                                              f      s              s  1                                                        ',
+			'           c                                                          c                            c                                                            dd s    f              lpppppppppppppr    lpppppppppppppr                                                 ',
+			'                                 c                                             8            b                           8                                 lpppppppppppppr              [             ]    [             ]                            c                    ',
+			'                                                                               4           b          d                 7                      c          [             ]              [             ]    [             ]                                                 ',
+			'    8                                                                          4            lppppppppppppppppr      b   4                                 [             ]              [             ]    [           8 ]                                      c          ',
+			'    5          8                                                            b  4            [                ]          4           b                     [             ]         b    [             ]    [           4 ]         c                                       ',
+			'    4          4                                                               3         m  [                ]       s  2                 f             m [             ]            m [             ]    [           6 ]                                                 ',
+			'    1 x        4                                                  s       lpppppppppr  lppppr                ]   lppppppppppr    lpppppppppppr    lpppppppppppr         ]      lpppppppppppr         ]    [       d   3 ]  s                  8                           ',
+			'lpppppppppr    6    s     f               b                  lppppppppr   [         ]  [    ]                ]   [          ]    [           ]    [           ]         ]      [           ]         ]    [     lpppppppppppppr               4                           ',
+			'[         ]    6   lpppppppr  8    b                 c       [        ]   [         ]  [    ]                ]   [          ]    [           ]    [           ]         ]      [           ]         ]    [     [             ]               5                      88   ',
+			'[         ]    2   [       ]  7              s              m[        ]   [         ]  [    ]                ]   [          ]    [           ]    [           ]         ]      [           ]         ]    [     [             ]               4                      44   ',
 			'[         ]ppppppppr       ]  5   d      lppppppppr    lppppppppr     ]   [         ]  [    ]                ]   [          ]    [           ]    [           ]         ]      [           ]         ]    [     [             ]               4                      64   ',
 			'[         ]        ]       ]  4 lppppppppr        ]    [        ]     ]   [         ]  [    ]                ]   [          ]    [           ]    [           ]         ]      [           ]         ]    [     [             ]               4                      44   ',
 			'[         ]        ]       ]  4 [        ]        ]    [        ]     ]   [         ]  [    ]                ]   [          ]    [           ]    [           ]         ]      [           ]         ]    [     [             ]               4                      44   ',
@@ -112,8 +154,12 @@ function CreateLevel() {
 	);
 }
 
-function HandleLevelCollision(player) {
-	if (player.colliding(mushroom) > 60) {
+/**
+ *  Handles the collision interaction between the level assets and the player
+ * @param {Sprite} player The player sprite
+ */
+function handleLevelCollision(player) {
+	if (player.colliding(mushrooms) > 60) {
 		player.vel.y = -6;
 	}
 
@@ -123,11 +169,56 @@ function HandleLevelCollision(player) {
 	}
 }
 
-function RandomizeClouds() {
+/**
+ * Handles the interaction when the player hits an enemy
+ * @param {Sprite} player The player sprite
+ */
+function handleEnemyCollision(player) {
+	if ((player.collided(slugs) ||
+		player.collided(bees)) &&
+		frameCount - player.lastHit > 120) {
+		player.lastHit = frameCount;
+		player.lives--;
+	}
+}
+
+/**
+ * Randomize the clouds in the sky
+ */
+function randomizeClouds() {
 	for (var i = 0; i < clouds.length; ++i) {
 		var scale = random(1, 10);
 
 		clouds[i].scale.x = scale;
 		clouds[i].scale.y = scale;
+	}
+}
+
+/**
+ * Updates all the bees and slugs movement
+ */
+function updateEnemies() {
+	for (var i = 0; i < slugs.length; ++i) {
+		var slug = slugs[i];
+
+		slug.vel.x = slug.dir;
+
+		if (slug.colliding(platformLeftWalls) || slug.colliding(platformRights)) {
+			slug.dir = -1;
+			slug.mirror.x = true;
+		}
+		else if (slug.colliding(platformRightWalls) || slug.colliding(platformLefts)) {
+			slug.dir = 1;
+			slug.mirror.x = false;
+		}
+	}
+
+	for (var i = 0; i < bees.length; ++i) {
+		var bee = bees[i];
+
+		if (dist(player.x, player.y, bee.x, bee.y) < 100) {
+			bee.collider = 'd';
+			bee.moveTo(player.x, player.y, 2);
+		}
 	}
 }
