@@ -53,7 +53,7 @@ function loadLevelAssets() {
 
 	treeBaseLeftSprite = loadImage('Assets/Art/Tiles/tile_0057.png');
 	treeBaseSprite = loadImage('Assets/Art/Tiles/tile_0058.png');
-	treeBaseRightSprite = loadImage('Assets/Art/tiles/tile_0059.png');
+	treeBaseRightSprite = loadImage('Assets/Art/Tiles/tile_0059.png');
 	treeTrunkLeftSprite = loadImage('Assets/Art/Tiles/tile_0047.png');
 	treeTrunkSprite = loadImage('Assets/Art/Tiles/tile_0048.png');
 	treeTrunkRightSprite = loadImage('Assets/Art/Tiles/tile_0049.png');
@@ -98,8 +98,8 @@ function createLevel() {
 	slugs = new Group();
 	slugs.collider = 'd';
 	slugs.addAni('walk',
-		'Assets/Art/tiles/tile_0055.png',
-		'Assets/Art/tiles/tile_0056.png'
+		'Assets/Art/Tiles/tile_0055.png',
+		'Assets/Art/Tiles/tile_0056.png'
 	);
 	slugs.tile = TileCharacters.Slug;
 	slugs.anis.frameDelay = 30;

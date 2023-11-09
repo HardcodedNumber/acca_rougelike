@@ -34,12 +34,12 @@ function preload() {
   player = new Sprite(0, 0, 16, 16, 'dynamic');
 
   player.addAni(PlayerState.Idle,
-    'Assets/Art/tiles/tile_0042.png'
+    'Assets/Art/Tiles/tile_0042.png'
   );
 
   player.addAni(PlayerState.Run,
-    'Assets/Art/tiles/tile_0041.png',
-    'Assets/Art/tiles/tile_0042.png'
+    'Assets/Art/Tiles/tile_0041.png',
+    'Assets/Art/Tiles/tile_0042.png'
   );
 
   player.anis.frameDelay = 30;
