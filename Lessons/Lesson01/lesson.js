@@ -1,5 +1,5 @@
 //lesson 01
-//Objective: Create a world, player, simple movement, camera
+//Objective: Create a world, player, simple movement
 
 // Global Vars
 ///////////////////////////////////////////////////////////
