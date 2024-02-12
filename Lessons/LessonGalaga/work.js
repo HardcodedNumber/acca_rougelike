@@ -1,10 +1,3 @@
-//lesson Asteroids
-//Objective: Create player, move player, shoot, create enemies, destroy enemies
-//           display health & score
-
-// Global Vars
-///////////////////////////////////////////////////////////
-
 //ship
 let ship, shipSprite;
 let shipSize = 25;
@@ -18,6 +11,13 @@ let bulletSprite, bulletSpeed = 10;
 //enemies
 let enemies = [], enemySprite;
 let maxEnemies = 5;
+let enemyHeight = 50;
+var enemySpeed = 2;
+
+let stage = 1;
+let showStageDisplay = true;
+let stageTimer = 0;
+let maxStageTime = 180;
 
 // Setup & draw
 ///////////////////////////////////////////////////////////
@@ -32,33 +32,17 @@ function setup() {
   shipSprite = loadImage('ship.jpeg'); //replace this with that long url
   ship.img = shipSprite;
   ship.layer = 1;
+  ship.rotationLock = true;
 
   //bullets
   bulletSprite = loadImage('bullet.png');
 
   //enemies
   enemySprite = loadImage('enemy.png');
-  //enemy = new Sprite(width / 2, height / 10, 32, 32);
-  //enemy.img = enemySprite;
 
-  var offset = width * 0.3;
-
-  for (var i = 0; i < maxEnemies; i++) { //++i
-    var xPosition = i * 100 + offset;
-    var enemy = new Sprite(xPosition, height / 10, 32, 32);
-    enemy.img = enemySprite;
-
-    enemies.push(enemy); //store the enemy in the array
-  }
+  spawnEnemies();
 }
 
-//single line comment
-/*multi line comment
-so i can talk about whatever here
-
-
-and keep on going
-*/
 function draw() {
   clear();
   background('#000000');
@@ -73,14 +57,56 @@ function draw() {
     spawnBullet(ship.x, ship.y - 25);
   }
 
+  if (showStageDisplay) {
+    stageTimer += deltaTime;
+
+    textSize(72);
+    text("Stage: " + stage, width / 2, height / 2);
+
+    if (stageTimer >= maxStageTime) {
+      showStageDisplay = false;
+      stageTimer = 0;
+    }
+  }
+
+  for (var i = 0; i < enemies.length; ++i) {
+    var enemy = enemies[i];
+
+    // if (enemy.boss = true) {
+    //   continue;
+    // }
+
+    if (enemy.y >= height / 2) {
+      enemy.vel.y = 0;
+    }
+  }
+
   teleport();
 
   //dont use movement method
   movement(ship, shipSize);
 }
 
-// Methods
+// Methods == function
 ///////////////////////////////////////////////////////////
+function spawnEnemies() {
+  var offset = width * 0.3;
+  var totalEnemies = maxEnemies * stage;
+
+  for (var i = 0; i < totalEnemies; i++) {
+    var xPosition = i * 100 + offset;
+    var rowIndex = Math.floor(i / maxEnemies);
+    var yPosition = (rowIndex * -enemyHeight);
+
+    var enemy = new Sprite(xPosition, yPosition, 32, 32);
+    enemy.img = enemySprite;
+    enemy.vel.y = enemySpeed;
+    enemy.rotationLock = true;
+
+    enemies.push(enemy); //store the enemy in the array
+  }
+}
+
 //this function will spawn a bullet at a location (x,y)
 function spawnBullet(x, y) {
   var bullet = new Sprite(x, y, 10, 10);
@@ -98,25 +124,6 @@ function spawnBullet(x, y) {
     bullet.overlaps(enemy, onBulletHit);
   }
 }
-
-/*(0,0)
-  |--------
-  | s
-  |
-*/
-//logical operators
-// || or
-// && and
-// ! not
-// ~ xor
-
-// comparison operators
-// > greater than
-// < less than
-// == equal to
-// >= greater than or equal to
-// <= less than or equal to
-
 
 //this will wrap the player around the screen in the x-axis
 function teleport() {
