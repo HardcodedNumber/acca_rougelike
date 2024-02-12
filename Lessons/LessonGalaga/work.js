@@ -6,7 +6,9 @@ let health = 100;
 let score = 0;
 
 //bullets
+let bullets = [];
 let bulletSprite, bulletSpeed = 10;
+let bulletSFX;
 
 //enemies
 let enemies = [], enemySprite;
@@ -21,6 +23,12 @@ let maxStageTime = 180;
 
 // Setup & draw
 ///////////////////////////////////////////////////////////
+function preload() {
+  //soundFormats('mp3');
+
+  bulletSFX = loadSound('lazer.mp3');
+}
+
 function setup() {
   new Canvas("16:9");
   frameRate(60);
@@ -35,6 +43,8 @@ function setup() {
   ship.rotationLock = true;
 
   //bullets
+  //soundFormats('mp3');
+
   bulletSprite = loadImage('bullet.png');
 
   //enemies
@@ -57,6 +67,13 @@ function draw() {
     spawnBullet(ship.x, ship.y - 25);
   }
 
+  if (enemies.length <= 0) {
+    stage++;
+    showStageDisplay = true;
+
+    spawnEnemies();
+  }
+
   if (showStageDisplay) {
     stageTimer += deltaTime;
 
@@ -72,12 +89,21 @@ function draw() {
   for (var i = 0; i < enemies.length; ++i) {
     var enemy = enemies[i];
 
-    // if (enemy.boss = true) {
-    //   continue;
-    // }
-
     if (enemy.y >= height / 2) {
       enemy.vel.y = 0;
+    }
+  }
+
+  for (var enemyIter = enemies.length - 1; enemyIter >= 0; --enemyIter) {
+    var enemy = enemies[enemyIter];
+
+    for (var bulletIter = bullets.length - 1; bulletIter >= 0; --bulletIter) {
+      var bullet = bullets[bulletIter];
+
+      if (bullet.collided(enemy)) {
+        onBulletHit(bullet, enemy);
+        break;
+      }
     }
   }
 
@@ -94,7 +120,8 @@ function spawnEnemies() {
   var totalEnemies = maxEnemies * stage;
 
   for (var i = 0; i < totalEnemies; i++) {
-    var xPosition = i * 100 + offset;
+    var xPosition = (i % maxEnemies) * 100 + offset;
+
     var rowIndex = Math.floor(i / maxEnemies);
     var yPosition = (rowIndex * -enemyHeight);
 
@@ -116,13 +143,15 @@ function spawnBullet(x, y) {
   bullet.scale = 0.1;
   bullet.vel.y = -bulletSpeed;
 
+  bullets.push(bullet);
+  bulletSFX.play();
   //register when the bullet hits the enemy
   //overlaps(target : any, callback : function);
-  for (var i = 0; i < maxEnemies; ++i) {
-    var enemy = enemies[i]; //[0, 1, 2, 3, 4]
+  // for (var i = 0; i < enemies.length; ++i) {
+  //   var enemy = enemies[i]; //[0, 1, 2, 3, 4]
 
-    bullet.overlaps(enemy, onBulletHit);
-  }
+  //   bullet.overlaps(enemy, onBulletHit);
+  // }
 }
 
 //this will wrap the player around the screen in the x-axis
@@ -145,8 +174,15 @@ function teleport() {
 //This occurs when the bullet hits an enemy
 function onBulletHit(bullet, enemy) {
   bullet.remove();
-  enemy.remove();
 
+  for (var i = enemies.length - 1; i >= 0; --i) {
+    if (enemies[i] == enemy) {
+      enemies.splice(i, 1);   //removes n elements out of the array
+      enemy.remove();
+
+      break;
+    }
+  }
   //score = score + 10;
   score += 10;
 }
